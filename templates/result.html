@@ -1,16 +1,26 @@
 <html>
-    <body>
+
+<body>
+    <center>
         <table border="2">
             <tr>
                 <th>Subject</th>
                 <th>Marks</th>
+                <th>Status</th>
             </tr>
             {% for key,value in result.iteritems() %}
             <tr>
                 <th>{{key}}</th>
                 <th>{{value}}</th>
+                {% if value<75 %}
+                <th>Fail</th>
+                {% else %}
+                <th>Pass</th>
+                {% endif %}
             </tr>
             {% endfor %}
         </table>
-    </body>
+    </center>
+</body>
+
 </html>
