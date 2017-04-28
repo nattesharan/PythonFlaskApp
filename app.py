@@ -2,8 +2,9 @@ from flask import Flask,redirect,url_for,request,render_template
 app = Flask(__name__)
 @app.route('/hello/<name>')
 def index(name):
-    a = "Hello "+ name
-    return a
+    # a = "Hello "+ name
+    # return a
+    return render_template('dynamic.html',name = name) #send the name value to the html file
 @app.route('/')
 def home():
     return '<html><body><h1><strong><i>Hello, this is home</i></strong></h1></body></html>'
