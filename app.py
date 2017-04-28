@@ -45,5 +45,14 @@ def result():
 @app.route('/event')
 def event():
     return render_template('alert.html')
+@app.route('/student')
+def student():
+    return render_template('student.html')
+@app.route('/studentresult', methods = ['POST', 'GET'])
+def studResult():
+    if request.method == 'POST':
+        result = request.form
+        # print(result)
+        return render_template('studresult.html', result = result)
 if __name__ == '__main__':
    app.run(port=int("3000"),debug = True)
