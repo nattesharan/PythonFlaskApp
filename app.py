@@ -38,5 +38,9 @@ def login():
     else:
         user = request.args.get('nm')
         return redirect(url_for('success', name = user))
+@app.route('/result')
+def result():
+    a = {'phy':80, 'che':75, 'maths': 80, 'english': 78, 'Economics': 69, 'Biology': 84}
+    return render_template('result.html', result = a)
 if __name__ == '__main__':
    app.run(port=int("3000"),debug = True)
