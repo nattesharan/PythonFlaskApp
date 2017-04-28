@@ -6,7 +6,7 @@ def index(name):
     return a
 @app.route('/')
 def home():
-    return "This is home"
+    return '<html><body><h1><strong><i>Hello, this is home</i></strong></h1></body></html>'
 @app.route('/hello/<int:no>')
 def display(no):
     return "Number is %d" % no
