@@ -1,4 +1,4 @@
-from flask import Flask,redirect,url_for,request
+from flask import Flask,redirect,url_for,request,render_template
 app = Flask(__name__)
 @app.route('/hello/<name>')
 def index(name):
@@ -7,6 +7,9 @@ def index(name):
 @app.route('/')
 def home():
     return '<html><body><h1><strong><i>Hello, this is home</i></strong></h1></body></html>'
+@app.route('/temp')
+def temp():
+    return render_template('simple.html')
 @app.route('/hello/<int:no>')
 def display(no):
     return "Number is %d" % no
