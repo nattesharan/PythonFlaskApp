@@ -13,7 +13,8 @@ def temp():
     return render_template('simple.html')
 @app.route('/hello/<int:no>')
 def display(no):
-    return "Number is %d" % no
+    # return "Number is %d" % no
+    return render_template('conditionals.html', no = no)
 @app.route('/admin')
 def hello_admin():
     return 'Hello Admin'
