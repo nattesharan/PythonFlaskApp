@@ -1,4 +1,4 @@
-from flask import Flask,redirect,url_for,request,render_template
+from flask import Flask,redirect,url_for,request,render_template,make_response
 app = Flask(__name__)
 @app.route('/hello/<name>')
 def index(name):
@@ -54,5 +54,19 @@ def studResult():
         result = request.form
         # print(result)
         return render_template('studresult.html', result = result)
+@app.route('/cookie')
+def cookie():
+    return render_template('addcookie.html')
+@app.route('/setcookie', methods = ['POST', 'GET'])
+def setcookie():
+    if request.method == 'POST':
+        name = request.form['nm']
+        resp = make_response(render_template('readcookie.html'))
+        resp.set_cookie('Name',name)
+        return resp
+@app.route('/showcookie')
+def showcookie():
+    name = request.cookies.get('Name')
+    return '<h1>Welcome ' + name + '!</h1>'
 if __name__ == '__main__':
    app.run(port=int("3000"),debug = True)
