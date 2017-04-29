@@ -1,11 +1,11 @@
-from flask import Flask,redirect,url_for,request,render_template,make_response,session
+from flask import Flask,redirect,url_for,request,render_template,make_response,abort
 import random
 app = Flask(__name__)
 secret = ''
 for i in range(0,10):
     secret += str(random.randint(0,9))
 app.secret_key = secret
-print(app.secret_key)
+# print(app.secret_key)
 @app.route('/hello/<name>')
 def index(name):
     # a = "Hello "+ name
@@ -40,7 +40,10 @@ def success(name):
 def login():
     if request.method == 'POST':
         user = request.form['nm']
-        return redirect(url_for('success', name = user))
+        if user == 'admin':
+            return redirect(url_for('success', name = user))
+        else:
+            abort(401)
     else:
         user = request.args.get('nm')
         return redirect(url_for('success', name = user))
