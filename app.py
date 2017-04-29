@@ -1,7 +1,15 @@
 from flask import Flask,redirect,url_for,request,render_template,make_response,abort,flash
 from werkzeug import secure_filename
 import random
+from flask_mail import Mail,Message
 app = Flask(__name__)
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'abcd@gmail.com'
+app.config['MAIL_PASSWORD'] = '**************'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 secret = ''
 for i in range(0,10):
     secret += str(random.randint(0,9))
@@ -120,5 +128,11 @@ def uploader():
         f = request.files['file']
         f.save(secure_filename(f.filename))
         return "<h1>File uploaded successfully</h1>"
+@app.route('/email')
+def sendemail():
+    msg = Message('HELLO ! Sent from python Flask App', sender = 'abcd@gmail.com', recipients = ['egghhg@gmail.com'])
+    msg.body = 'Hello Flask message sent from Flask-Mail'
+    mail.send(msg)
+    return '<h1><i>Mail Sent</i></h1>'
 if __name__ == '__main__':
    app.run(port=int("3000"),debug = True)
