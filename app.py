@@ -1,5 +1,11 @@
-from flask import Flask,redirect,url_for,request,render_template,make_response
+from flask import Flask,redirect,url_for,request,render_template,make_response,session
+import random
 app = Flask(__name__)
+secret = ''
+for i in range(0,10):
+    secret += str(random.randint(0,9))
+app.secret_key = secret
+print(app.secret_key)
 @app.route('/hello/<name>')
 def index(name):
     # a = "Hello "+ name
@@ -68,5 +74,26 @@ def setcookie():
 def showcookie():
     name = request.cookies.get('Name')
     return '<h1>Welcome ' + name + '!</h1>'
+@app.route('/session')
+def initial():
+    if 'username' in session:
+      username = session['username']
+      return 'Logged in as ' + username + '<br>' + \
+         "<b><a href = '/signout'>click here to log out</a></b>"
+    return "You are not logged in <br><a href = '/signin'></b>" + \
+      "click here to log in</b></a>"
+@app.route('/signin', methods = ['GET', 'POST'])
+def signin():
+    if request.method == 'POST':
+        session['username'] = request.form['username']
+        return redirect(url_for('initial'))
+    return '''<form action = "" method = "post">
+      <p><input type ="text" name = "username"/></p>
+      <p><input type = 'submit' value = "Login"/></p>
+      </form>'''
+@app.route('/signout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('initial'))
 if __name__ == '__main__':
    app.run(port=int("3000"),debug = True)
