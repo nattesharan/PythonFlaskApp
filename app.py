@@ -1,11 +1,11 @@
 from flask import Flask,redirect,url_for,request,render_template,make_response,abort,flash
+from werkzeug import secure_filename
 import random
 app = Flask(__name__)
 secret = ''
 for i in range(0,10):
     secret += str(random.randint(0,9))
 app.secret_key = secret
-# print(app.secret_key)
 @app.route('/hello/<name>')
 def index(name):
     # a = "Hello "+ name
@@ -111,5 +111,14 @@ def signinn():
             flash('You were successfully logged in')
             return redirect(url_for('flash'))
     return render_template('login.html', error = error)
+@app.route('/upload')
+def upload():
+    return render_template('upload.html')
+@app.route('/uploader',methods = ['POST', 'GET'])
+def uploader():
+    if request.method == 'POST':
+        f = request.files['file']
+        f.save(secure_filename(f.filename))
+        return "<h1>File uploaded successfully</h1>"
 if __name__ == '__main__':
    app.run(port=int("3000"),debug = True)
