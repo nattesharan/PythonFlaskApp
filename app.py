@@ -157,5 +157,16 @@ def addrec():
         finally:
             return render_template('result1.html', msg = msg)
             conn.close()
+@app.route('/list')
+def showList():
+    conn = sqlite3.connect('stud.db')
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    cur.execute('select * from Students')
+    rows = cur.fetchall()
+    return render_template('list.html', rows = rows)
+@app.route('/homepage')
+def gotohome():
+    return render_template('showoptions.html')
 if __name__ == '__main__':
    app.run(port=int("3000"),debug = True)
