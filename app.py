@@ -2,6 +2,7 @@ from flask import Flask,redirect,url_for,request,render_template,make_response,a
 from werkzeug import secure_filename
 import random
 from flask_mail import Mail,Message
+import sqlite3
 app = Flask(__name__)
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
@@ -134,5 +135,27 @@ def sendemail():
     msg.body = 'Hello Flask message sent from Flask-Mail'
     mail.send(msg)
     return '<h1><i>Mail Sent</i></h1>'
+@app.route('/addnew')
+def add():
+    return render_template('add.html')
+@app.route('/addrec', methods = ['POST', 'GET'])
+def addrec():
+    if request.method == 'POST':
+        try:
+            name = request.form['nm']
+            address = request.form['add']
+            city = request.form['city']
+            pin = request.form['pin']
+            with sqlite3.connect('stud.db') as conn:
+                cur = conn.cursor()
+                cur.execute("INSERT INTO Students (name,addr,city,pin) VALUES (?,?,?,?)",(name,address,city,pin))
+                conn.commit()
+                msg = 'Record Successfully added'
+        except:
+            conn.rollback()
+            msg = 'Some error found'
+        finally:
+            return render_template('result1.html', msg = msg)
+            conn.close()
 if __name__ == '__main__':
    app.run(port=int("3000"),debug = True)
