@@ -3,6 +3,7 @@ from werkzeug import secure_filename
 import random
 from flask_mail import Mail,Message
 import sqlite3
+from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
@@ -10,7 +11,22 @@ app.config['MAIL_USERNAME'] = 'abcd@gmail.com'
 app.config['MAIL_PASSWORD'] = '**************'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///students.sqlite3'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 mail = Mail(app)
+db = SQLAlchemy(app)
+class students(db.Model):
+    id = db.Column('student_id', db.Integer, primary_key = True)
+    name = db.Column(db.String(100))
+    city = db.Column(db.String(50))
+    addr = db.Column(db.String(200))
+    pin = db.Column(db.String(10))
+    def __init__(self,name,city,addr,pin):
+        self.name = name
+        self.city = city
+        self.addr = addr
+        self.pin = pin
+
 secret = ''
 for i in range(0,10):
     secret += str(random.randint(0,9))
@@ -168,5 +184,20 @@ def showList():
 @app.route('/homepage')
 def gotohome():
     return render_template('showoptions.html')
+@app.route('/showall')
+def showall():
+    return render_template('showall.html', students = students.query.all())
+@app.route('/newstud', methods = ['POST','GET'])
+def new():
+    if request.method == 'POST':
+        if not request.form['name'] or not request.form['city'] or not request.form['addr']:
+            return redirect(url_for('new'))
+        else:
+            student = students(request.form['name'],request.form['city'],request.form['addr'],request.form['pin'])
+            db.session.add(student)
+            db.session.commit()
+            return redirect(url_for('showall'))
+    return render_template('new.html')
 if __name__ == '__main__':
-   app.run(port=int("3000"),debug = True)
+    db.create_all()
+    app.run(port=int("3000"),debug = True)
