@@ -39,7 +39,6 @@ def index(name):
 @app.route('/')
 def home():
     user_agent = request.headers.get('User-Agent')
-    print(user_agent1)
     return '''<html><body><h1><strong><i>Hello, this is home</i></strong></h1>
               <h2>The user browser is %s</h2>
            </body></html>''' %user_agent
