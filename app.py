@@ -38,7 +38,11 @@ def index(name):
     return render_template('dynamic.html',name = name) #send the name value to the html file
 @app.route('/')
 def home():
-    return '<html><body><h1><strong><i>Hello, this is home</i></strong></h1></body></html>'
+    user_agent = request.headers.get('User-Agent')
+    print(user_agent1)
+    return '''<html><body><h1><strong><i>Hello, this is home</i></strong></h1>
+              <h2>The user browser is %s</h2>
+           </body></html>''' %user_agent
 @app.route('/temp')
 def temp():
     return render_template('simple.html')
